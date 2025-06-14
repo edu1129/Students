@@ -1,0 +1,6 @@
+{
+  "name": "Student Portal React",
+  "description": "A React and Tailwind CSS application for students to view their academic and financial information, converted from an existing HTML/JS portal. This application requires the GAS_URL environment variable to be set to the Google Apps Script URL.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
