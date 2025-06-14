@@ -1,20 +1,21 @@
-
 import { ApiAction, StudentLoginPayload, StudentLoginResponse, StudentDetailsResponse, ApiPayload } from '../types';
 
-// GAS_URL will be accessed from environment variable: process.env.GAS_URL
+// GAS_URL ko ab import.meta.env.VITE_GAS_URL se access kiya jayega
 
-export async function callStudentApi<T extends StudentLoginResponse | StudentDetailsResponse>(
+export async function callStudentApi < T extends StudentLoginResponse | StudentDetailsResponse > (
   action: ApiAction,
-  payload: Omit<ApiPayload, 'action'> = {}
-): Promise<T> {
+  payload: Omit < ApiPayload, 'action' > = {}
+): Promise < T > {
   const fullPayload: ApiPayload = { action, ...payload };
-  const gasUrl = process.env.GAS_URL;
-
+  // Vite ke environment variable ko access karne ka sahi tareeka
+  const gasUrl = import.meta.env.VITE_GAS_URL;
+  
   if (!gasUrl) {
-    console.error("GAS_URL environment variable is not set.");
-    return { success: false, error: "Application configuration error: GAS_URL is not set." } as T;
+    // Error message ko bhi update kar diya gaya hai
+    console.error("VITE_GAS_URL environment variable is not set. Please check your .env file.");
+    return { success: false, error: "Application configuration error: The API URL is not set." } as T;
   }
-
+  
   try {
     const res = await fetch(gasUrl, {
       method: 'POST',
@@ -25,10 +26,10 @@ export async function callStudentApi<T extends StudentLoginResponse | StudentDet
       },
       body: JSON.stringify(fullPayload),
     });
-
+    
     const responseBodyText = await res.text();
     let resultJson;
-
+    
     try {
       resultJson = JSON.parse(responseBodyText);
     } catch (e) {
